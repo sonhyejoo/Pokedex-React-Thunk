@@ -1,9 +1,16 @@
-import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { getPokemonItems } from "../store/pokemon";
 
 const PokemonItems = ({ pokemon, setEditItemId }) => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getPokemonItems(pokemon.id));
+  }, [pokemon.id, dispatch]);
+
   const items = useSelector((state) => {
     if (!pokemon.items) return null;
-    return pokemon.items.map(itemId => state.items[itemId]);
+    return pokemon.items.map((itemId) => state.items[itemId]);
   });
 
   if (!items) {
@@ -24,18 +31,13 @@ const PokemonItems = ({ pokemon, setEditItemId }) => {
       <td className="centered">${item.price}</td>
       {pokemon.captured && (
         <td className="centered">
-          <button onClick={() => setEditItemId(item.id)}>
-            Edit
-          </button>
+          <button onClick={() => setEditItemId(item.id)}>Edit</button>
         </td>
       )}
       {pokemon.captured && (
         <td className="centered">
-          <button>
-            Delete
-          </button>
+          <button>Delete</button>
         </td>
-        
       )}
     </tr>
   ));
